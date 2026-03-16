@@ -1,26 +1,36 @@
 name: Update Data Otomatis
+
 on:
   schedule:
-    - cron: '0 * * * *' # Berjalan setiap jam
-  workflow_dispatch: # Bisa dijalankan manual
+    - cron: '0 * * * *' # Setiap jam
+  workflow_dispatch: # Memungkinkan jalan manual
+
+permissions:
+  contents: write # PENTING: Memberikan izin untuk menulis file data.txt
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - name: Checkout Repository
+        uses: actions/checkout@v4 # Update ke v4
+
       - name: Set up Python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v5 # Update ke v5
         with:
           python-version: '3.9'
+
       - name: Install dependencies
-        run: pip install requests beautifulsoup4
+        run: pip install requests
+
       - name: Run Scraper
         run: python scraper.py
+
       - name: Commit and Push
         run: |
-          git config --global user.name 'Scraper Bot'
-          git config --global user.email 'bot@github.com'
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
           git add data.txt
-          git commit -m "Update data otomatis" || exit 0
+          # Menghindari error jika tidak ada perubahan data
+          git commit -m "Update data otomatis" || echo "Tidak ada perubahan data"
           git push
