@@ -28,11 +28,11 @@ jobs:
           touch data.txt
           python scraper.py
 
-      - name: Commit and Push
+     - name: Commit and Push
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
           git add data.txt
           git commit -m "Update data otomatis" || echo "No changes to commit"
-          git pushEAD || git commit -m "Update data otomatis"
+          git pushUpdate data otomatis"
           git push
