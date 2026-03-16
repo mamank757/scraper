@@ -1,1 +1,1 @@
-Error Status: 403
+Error Status: 403. Server memblokir akses.
