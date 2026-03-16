@@ -3,48 +3,53 @@ import requests
 def ambil_data():
     url = "https://2025.epusluh.id/api/v1/lcs?url=%2Flcs&page=1&per_page=10"
     
-    # Masukkan Token dan Cookie yang paling baru di sini
+    # Headers persis hasil cURL kamu
     headers = {
-        "Authorization": "Bearer 5174356|4LqsGwgPCbJmBmFtLrFEqV1IPQmSgSElBCb6WwH966d72182",
-        "Cookie": "https://2025.epusluh.id/api/v1/lcs?url=%2Flcs&page=1&per_page=10",
-        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36",
-        "Accept": "application/json, text/plain, */*",
-        "Accept-Language": "id-ID,id;q=0.9,en-US;q=0.8,en;q=0.7",
-        "Origin": "https://dev.epusluh.id",
-        "Referer": "https://dev.epusluh.id/",
-        "Sec-Fetch-Dest": "empty",
-        "Sec-Fetch-Mode": "cors",
-        "Sec-Fetch-Site": "same-site",
+        'authority': '2025.epusluh.id',
+        'accept': 'application/json, text/plain, */*',
+        'accept-language': 'id-ID,id;q=0.9,en-US;q=0.8,en;q=0.7',
+        'authorization': 'Bearer 5174356|4LqsGwgPCbJmBmFtLrFEqV1IPQmSgSElBCb6WwH966d72182',
+        'origin': 'https://dev.epusluh.id',
+        'referer': 'https://dev.epusluh.id/',
+        'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36',
+        'sec-ch-ua': '"Not A(Brand";v="99", "Google Chrome";v="121", "Chromium";v="121"',
+        'sec-ch-ua-mobile': '?0',
+        'sec-ch-ua-platform': '"Windows"',
+        'sec-fetch-dest': 'empty',
+        'sec-fetch-mode': 'cors',
+        'sec-fetch-site': 'same-site'
     }
 
     try:
+        # Menggunakan session agar koneksi lebih stabil
         session = requests.Session()
-        response = session.get(url, headers=headers, timeout=15)
+        response = session.get(url, headers=headers, timeout=20)
         
-        print(f"Status Code: {response.status_code}")
+        print(f"Status: {response.status_code}")
         
         if response.status_code == 200:
-            data_json = response.json()
-            # Mencoba mengambil data dari list
-            items = data_json.get('data', {}).get('data', [])
+            data = response.json()
+            # Mencoba navigasi ke field data
+            items = data.get('data', {}).get('data', [])
             
             if items:
-                # Mengambil judul dari item pertama
-                teks_final = items[0].get('title') or items[0].get('caption') or "Data Ada, Field Kosong"
+                # Ambil field 'title' atau 'content'
+                # Kita coba ambil field 'title' dulu
+                hasil = items[0].get('title') or items[0].get('content') or "Data ditemukan tanpa judul"
                 
                 with open("data.txt", "w", encoding="utf-8") as f:
-                    f.write(str(teks_final))
-                print(f"Berhasil! Data: {teks_final}")
+                    f.write(str(hasil))
+                print(f"Berhasil: {hasil}")
             else:
                 with open("data.txt", "w") as f:
-                    f.write("Data list kosong di dalam JSON.")
+                    f.write("JSON OK, tapi list data kosong.")
         else:
             with open("data.txt", "w") as f:
-                f.write(f"Masih Error {response.status_code}. Cek Token/Cookie.")
+                f.write(f"Gagal 403: Cloudflare memblokir IP GitHub.")
                 
     except Exception as e:
         with open("data.txt", "w") as f:
-            f.write(f"Fatal Error: {str(e)}")
+            f.write(f"Error: {str(e)}")
 
 if __name__ == "__main__":
     ambil_data()
