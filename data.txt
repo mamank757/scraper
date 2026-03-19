@@ -1,1 +1,1 @@
-Gagal 403: Cloudflare memblokir IP GitHub.
+Error: HTTPSConnectionPool(host='2025.epusluh.id', port=443): Max retries exceeded with url: /api/v1/lcs?url=%2Flcs&page=1&per_page=10 (Caused by SSLError(SSLError(1, '[SSL: TLSV1_ALERT_INTERNAL_ERROR] tlsv1 alert internal error (_ssl.c:1147)')))
